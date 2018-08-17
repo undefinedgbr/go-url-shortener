@@ -15,7 +15,7 @@ func main() {
 	r.HandleFunc("/{url}", shortener_service.FetchHandler)
 	http.Handle("/", r)
 
-	err := http.ListenAndServe(":5000", nil)
+	err := http.ListenAndServe(":80", nil)
 	fmt.Println(err)
 }
 

@@ -18,6 +18,7 @@ func FetchHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetLongURL(shortURL string) string {
 	db, err := sql.Open(DRIVER_NAME, DB_NAME)
+	defer db.Close()
 	if err != nil {
 		return ""
 	}

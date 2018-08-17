@@ -44,6 +44,7 @@ func GenRandomStr() string {
 
 func SaveURLToDB(longURL string, shortURL string) int64 {
 	db, err := sql.Open(DRIVER_NAME, DB_NAME)
+	defer db.Close()
 	ErrToPanic(err)
 
 	insert, err := db.Prepare("insert into urls(long_url, short_url) values(?, ?)")

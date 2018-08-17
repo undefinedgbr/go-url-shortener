@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>FuwaFuwa - URL Shortener</title>
+</head>
+<body>
+    <div class="pure-g main-container">
+        <div class="pure-u-1-12 pure-u-md-1-6 pure-u-lg-1-4">
+            &nbsp;
+        </div>
+        <div class="pure-u-5-6 pure-u-md-2-3 pure-u-lg-1-2 content">
+            <div class="title">
+                ~FuwaFuwa~
+            </div>
+            <form>
+                <input id="url" name="url" placeholder="http://google.com">
+                <button id="button" type="button" onclick="shorten()">Go</button>
+            </form>
+            <div class="footer">
+                Made in Golang with ❤ by yukinotenshi
+            </div>
+        </div>
+        <div class="pure-u-1-12 pure-u-md-1-6 pure-u-lg-1-4">
+            &nbsp;
+        </div>
+    </div>
+</body>
+
+<style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        background: #00cec9;
+    }
+
+    .main-container {
+        padding-top: 12em;
+    }
+
+    .content {
+        text-align: center;
+    }
+
+    .title {
+        color: white;
+        font-size: 3em;
+        font-family: 'Indie Flower', cursive;
+    }
+
+    form {
+        padding: 0px;
+    }
+
+    #url {
+        border-width: 0px;
+        font-size: 1em;
+        margin: 0px;
+        padding: 0.3em;
+        font-family: 'Indie Flower', cursive;
+        width: 75%;
+        outline-color: #55efc4;
+    }
+
+    #button {
+        border-width: 0px;
+        font-size: 1em;
+        padding: 0.3em;
+        padding-left: 1em;
+        padding-right: 1em;
+        margin-left: -5px;
+        background: #81ecec;
+        color: white;
+        font-family: 'Indie Flower', cursive;
+        outline-color: #55efc4;
+    }
+
+    .footer {
+        color: white;
+        font-size: 0.8em;
+        font-family: 'Indie Flower', cursive;
+        text-align: center;
+        margin-top: 2em;
+    }
+
+    @media only screen and (min-width: 418px) {
+        .title {
+            font-size: 4em;
+        }
+
+        #url, #button{
+            font-size: 1.5em;
+        }
+    }
+
+    @media only screen and (min-width: 600px) {
+        .title {
+            font-size: 6em;
+        }
+
+        #url, #button {
+            font-size: 2em;
+        }
+    }
+</style>
+<script>
+    const API_URL = "http://127.0.0.1:5000/";
+    const URL_FIELD = document.getElementById("url");
+
+    async function shorten() {
+        let long_url = URL_FIELD.value;
+        let result = await fetch(API_URL + "shorten", {
+            method: "POST",
+            body: JSON.stringify({"url" : long_url}),
+            headers: new Headers()
+        });
+        console.log(result);
+        let json_result = await result.json();
+        URL_FIELD.value = await API_URL + json_result["url"];
+    }
+</script>
+</html>

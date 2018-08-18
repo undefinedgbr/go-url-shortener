@@ -36,6 +36,7 @@ func GetLongURL(shortURL string) string {
 	var longURL string
 	rows.Next()
 	rows.Scan(&longURL)
+	rows.Close()
 
 	return longURL;
 }

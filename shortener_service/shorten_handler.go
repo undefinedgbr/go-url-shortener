@@ -22,12 +22,17 @@ func ShortenHandler(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 	if err != nil {
 		fmt.Fprintf(w, `{"error" : "Invalid request"}`)
+		return
 	}
 
 	fmt.Printf("URL : %s", request.Url);
 
 	short_url := GenRandomStr()
-	SaveURLToDB(request.Url, short_url)
+	_, err = SaveURLToDB(request.Url, short_url)
+	if err != nil {
+		fmt.Fprintf(w, `{"error" : "Invalid request"}`)
+		return
+	}
 
 	fmt.Fprintf(w, `{"url" : "%s"}`, short_url)
 }
@@ -42,19 +47,27 @@ func GenRandomStr() string {
 	return string(result)
 }
 
-func SaveURLToDB(longURL string, shortURL string) int64 {
+func SaveURLToDB(longURL string, shortURL string) (int64, error) {
 	db, err := sql.Open(DRIVER_NAME, DB_NAME)
 	db.SetMaxOpenConns(1)
-	ErrToPanic(err)
+	if err != nil {
+		return -1, err
+	}
 
 	insert, err := db.Prepare("insert into urls(long_url, short_url) values(?, ?)")
-	ErrToPanic(err)
+	if err != nil {
+		return -1, err
+	}
 
 	result, err := insert.Exec(longURL, shortURL)
-	ErrToPanic(err)
+	if err != nil {
+		return -1, err
+	}
 
 	id, err := result.LastInsertId()
-	ErrToPanic(err)
+	if err != nil {
+		return -1, err
+	}
 
-	return id
+	return id, nil
 }
